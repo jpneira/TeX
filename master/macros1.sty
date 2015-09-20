@@ -1,0 +1,175 @@
+
+%%---------------------------------------
+%% Tamaño Pagina e identacion
+%%---------------------------------------
+\usepackage[
+% Tamaño papel
+	letterpaper,
+% Margen izquerdo
+	left=4.5cm,
+% Margen derecho
+	right=3.5cm,
+% Margeb inferior	
+	top=2.5cm,
+% Margen superior	
+	bottom=2.5cm]
+% Paque para modificar margenes
+	{geometry}
+
+%%---------------------------------------
+%% Hyperref
+%%---------------------------------------
+% usar '\phantomsection' para secciones fantasma
+\usepackage[usenames,dvipsnames]{color}            % Usar colores en el texto
+\usepackage[colorlinks=true,                       % Activar uso de colores                           
+			linkcolor=BrickRed,                    % Color de los enlaces internos (secciones, páginas, etc.)
+		    filecolor=magenta,                     % Color de los enlaces a los ficheros
+		    citecolor=green,                       % Color de las citas bibliográficas.
+			urlcolor=Bittersweet,                  % Color de los enlaces URL (mail, web)
+			linktocpage]                           % Hyperref nº de pagina en el indice
+            {hyperref}                             % Paque para hiperenlaces
+
+
+% Estilo subseccion
+\makeatletter
+\renewcommand\subsubsection{\@startsection {section}{1}{\z@}%
+                                   {-3ex \@plus -1ex \@minus -.2ex}%
+                                   {1.3ex \@plus.2ex}%
+                                   {\raggedright\normalfont\small\scshape}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Capitulo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\def\baselinestretch{1.}
+\def\@chapapp{}
+\def\epi{}
+\def\epii{}
+\newcommand{\epigraph}[2]{
+\def\epi{\parbox{\textwidth}%
+{\raggedleft\normalsize\sl#1}\vskip 1.2pc plus 0.1pc minus0.1pc}
+\def\epii{\parbox{\textwidth}%
+{\raggedleft\normalsize#2}\vskip 2pc plus0.2pc minus0.2pc}}
+%%
+\def\@makechapterhead#1{                  % Heading for \chapter command
+  \vspace*{2pc}                           % Space at top of text page.
+  { \parindent 0pt \raggedleft
+    \ifnum \c@secnumdepth >\m@ne          % IF secnumdepth > -1 THEN
+      \huge\bf \@chapapp{} \thechapter    % Print 'Chapter' and number.
+      \par
+      \vskip 0.5pc \fi                    % Space between number and title.
+    \parindent 0pt\raggedleft\LARGE \bf   % Title.
+    #1\par
+    \vskip 2pc
+    \epi
+    \epii
+    \hrule height 0.5pt
+    \vskip 1.5pt
+    \hrule height 1.5pt
+    \nobreak                              % TeX penalty to prevent page break.
+    \vskip 4pc                            % Space between title and text.
+  } }
+%%\chapter*
+\def\@makeschapterhead#1{                 % Heading for \chapter* command
+  \vspace*{2pc}                           % Space at top of page.
+  { \parindent 0pt \raggedleft
+    \LARGE \bf                            % Title.
+    #1\par
+    \vskip 5pc
+    \hrule height 0.5pt
+    \vskip 1.5pt
+    \hrule height 1.5pt
+    \nobreak                              % TeX penalty to prevent page break.
+    \vskip 4pc                            % Space between title and text.
+  } }
+
+\def\chapter{\cleardoublepage             % Starts new page.
+   \thispagestyle{plain}                  % Page style of chapter page is 'plain'
+   \global\@topnum\z@                     % Prevents figures from going at top of page.
+   \@afterindentfalse                     % Suppresses indent in first paragraph.  Change
+   \secdef\@chapter\@schapter}            % to \@afterindenttrue to have indent.
+%%
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+        \refstepcounter{chapter}
+        \typeout{\@chapapp\space\thechapter.}
+        \addcontentsline{toc}{chapter}{CAP\'{I}TULO\hspace{0.2em}\protect
+        \numberline{\thechapter}#2}\else
+        \addcontentsline{toc}{chapter}{CAP\'{I}TULO\hspace{0.2em}#2}\fi
+%%
+   \chaptermark{}
+   \addtocontents{lof}{\protect\addvspace{11pt}} % Adds between-chapter space
+   \addtocontents{lot}{\protect\addvspace{11pt}} % to lists of figs & tables.
+   \if@twocolumn                                 % Tests for two-column mode.
+           \@topnewpage[\@makechapterhead{#2}]
+     \else \@makechapterhead{#2}
+           \@afterheading                        % Routine called after chapter and
+     \fi
+\renewcommand\epi{}
+\renewcommand\epii{}
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Indice
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%section heading.
+%contents
+\def\@sect#1#2#3#4#5#6[#7]#8{\ifnum #2>\c@secnumdepth
+     \def\@svsec{}\else
+     \refstepcounter{#1}\edef\@svsec{\csname the#1\endcsname\hskip 1em }\fi
+     \@tempskipa #5\relax
+      \ifdim \@tempskipa>\z@
+        \begingroup #6\relax
+          \@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}%
+        \endgroup
+       \csname #1mark\endcsname{#7}\addcontentsline
+         {toc}{#1}{\ifnum #2>\c@secnumdepth \else
+                      \protect\numberline{\csname the#1\endcsname}\fi
+                    #8}\else
+        \def\@svsechd{#6\hskip #3\relax           % \relax added 2 May 90
+                   \@svsec #8\csname #1mark\endcsname
+                      {#7}\addcontentsline
+                           {toc}{#1}{\ifnum #2>\c@secnumdepth \else
+                             \protect\numberline{\csname the#1\endcsname}\fi
+                       #8}}\fi
+     \@xsect{#5}}
+
+\def\section{\@startsection {section}{1}{\z@}{-4pc plus -0.8pc minus
+    -0.8pc}{0.2pc minus .2pc}{\normalsize\bf}}
+\def\subsection{\@startsection{subsection}{2}{\z@}{-1.4pc plus -0.8pc minus
+ -0.4pc}{1pc plus 0.4pc minus0.2pc}{\normalsize\it}}
+\def\thesubsection    {\thesection.\arabic{subsection}.}
+%Contents
+\def\@dotsep{10000}                              % without dots
+\setcounter{tocdepth}{1}
+%Chapters
+\def\l@chapter#1#2{\pagebreak[3]
+   \vskip 1.0em plus 1pt                         % space above chapter line
+   \@tempdima 2em                                % width of box holding chapter number
+   \begingroup
+     \leftskip=7.6em                             % left spkip with `CHAPTER' word
+     \parindent \z@ \rightskip \@pnumwidth
+     \parfillskip -\@pnumwidth
+     \rm                                         % Roman
+     \leavevmode                                 % TeX command to enter horizontal mode.
+     \noindent
+     \hspace{-\leftskip}#1%
+\nobreak\hfil \nobreak\hbox to\@pnumwidth{\hss #2}\par
+   \endgroup}
+%Contenidos chapter*
+\def\@schapter#1{
+      \addcontentsline{toc}{mytit}{#1}
+\if@twocolumn \@topnewpage[\@makeschapterhead{#1}]
+        \else \@makeschapterhead{#1}
+              \@afterheading\fi}
+
+\def\l@section{\@dottedtocline{1}{7.6em}{2.3em}}
+\newcommand{\l@mytit}[2]{\vskip 1.0em plus 1pt%
+\hbox to\textwidth{\uppercase{#1}\hfill #2}}
+\newcommand{\l@mystart}[2]{\vskip 1.0em plus 1pt%
+\hbox to\textwidth{#1\hfill #2}}
+\renewcommand{\tableofcontents}%
+{\thispagestyle{plain}\markboth{\'{I}ndice}{\'{I}ndice}%
+\vspace*{1pc}{\parindent 0pt\raggedright{\huge\bf{}\'{I}ndice}}%
+\vskip 0.5in plus0.1in minus 0.1in%
+\@starttoc{toc}}
+
